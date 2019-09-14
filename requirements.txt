@@ -3,4 +3,4 @@ scipy
 ase
 rmsd
 pandas
-git+git://github.com/andersx/qml@gradient_kernel
+git+git://github.com/qmlcode/qml@develop
