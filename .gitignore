@@ -1,6 +1,7 @@
 
 data/
 env/
+_tmp_*
 
 
 # Byte-compiled / optimized / DLL files
