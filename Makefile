@@ -18,7 +18,8 @@ data:
 
 #
 
-
+test:
+	${PYTHON} training.py --test
 
 
 #
