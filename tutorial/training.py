@@ -1,4 +1,6 @@
 
+import json
+
 import numpy as np
 import pandas as pd
 import ast
@@ -24,23 +26,18 @@ FILENAMES = [
 ]
 
 DISTANCE_CUT = 4.0
-
 DEFAULT_PARAMETERS = {
+    "pad": 25, # max atoms
     "rcut": DISTANCE_CUT,
     "acut": DISTANCE_CUT,
+    "elements": [1, 6, 8],
 }
-
-DEFAULT_ELEMENTS = [1, 6, 8]
-
-MAX_ATOMS = 25
 
 # for tutorial sake
 np.random.seed(42)
 
 def read_csv_file(filename, n=32,
-    parameters=DEFAULT_PARAMETERS,
-    elements=DEFAULT_ELEMENTS,
-    max_atoms=MAX_ATOMS):
+        parameters=DEFAULT_PARAMETERS):
     """
 
     """
@@ -75,8 +72,6 @@ def read_csv_file(filename, n=32,
                 nuclear_charges,
                 coordinates,
                 gradients=True,
-                pad=max_atoms,
-                elements=elements,
                 **parameters)
 
         #
@@ -210,14 +205,26 @@ def read_model(dataname="_deploy_"):
     charges = np.load("data/"+dataname+"_Q.npy", allow_pickle=True)
     representations = np.load("data/"+dataname+"_X.npy")
 
-    return offset, sigma, alpha, charges, representations
+    with open("data/"+dataname+"_parameters.json", 'r') as f:
+        txt = f.read()
+        parameters = json.loads(txt)
+
+    return offset, sigma, alpha, charges, representations, parameters
 
 
 def deploy(filenames, n_train=100, sigma=10.0, dataname="_deploy_"):
 
     offset = 0.0
 
-    representations, d_representations, charges, energies, forces = read_csv_files(filenames)
+    distance_cut = 4.0
+    parameters = {
+        "pad": 25,
+        "rcut": distance_cut,
+        "acut": distance_cut,
+        "elements": [1, 6, 8],
+    }
+
+    representations, d_representations, charges, energies, forces = read_csv_files(filenames, parameters=parameters)
 
     n_points = len(energies)
 
@@ -240,13 +247,18 @@ def deploy(filenames, n_train=100, sigma=10.0, dataname="_deploy_"):
 
     alpha = training(kernel_te, kernel_t, training_energies, training_forces)
 
+    dump = json.dumps(parameters)
+
     # Save results
     if dataname is not None:
         np.save("data/"+dataname+"_offset.npy", offset)
         np.save("data/"+dataname+"_sigma.npy", sigma)
         np.save("data/"+dataname+"_alphas.npy", alpha)
-        np.save("data/"+dataname+"_Q.npy", charges, allow_pickle=True)
-        np.save("data/"+dataname+"_X.npy", representations)
+        np.save("data/"+dataname+"_Q.npy", training_charges, allow_pickle=True)
+        np.save("data/"+dataname+"_X.npy", training_repr)
+
+        with open("data/"+dataname+"_parameters.json", 'w') as f:
+            f.write(dump)
 
     return offset, sigma, alpha, charges, representations
 

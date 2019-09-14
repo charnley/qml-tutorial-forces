@@ -2,7 +2,9 @@
 PYTHON=./env/bin/python
 CONDA=conda
 
-setup: env pip data
+all: env
+
+setup: env pip data download_dft download_ccsd
 
 env:
 	${CONDA} env create -f environment.yml -p env
@@ -26,12 +28,17 @@ download_ccsd: data
 test:
 	${PYTHON} tutorial/training.py --test
 
-deploy_model:
+deploy:
 	${PYTHON} tutorial/training.py
 
-molcular_dynamics:
+molecular_dynamics:
 	${PYTHON} tutorial/molecular_dynamics.py --model data/_deploy_
 
+
+#
+
+notebook:
+	env/bin/jupyter notebook
 
 #
 
