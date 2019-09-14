@@ -13,13 +13,24 @@ pip: env
 
 data:
 	mkdir -p data
+
+download_dft: data
 	cd data; wget https://ndownloader.figshare.com/files/12842591 -O training_data.tar.bz2
 	cd data; bunzip2 training_data.tar.bz2
+
+download_ccsd: data
+	cd data
 
 #
 
 test:
 	${PYTHON} training.py --test
+
+deploy_model:
+	${PYTHON} training.py
+
+molcular_dynamics:
+	${PYTHON} molecular_dynamics.py --model data/_deploy_
 
 
 #
