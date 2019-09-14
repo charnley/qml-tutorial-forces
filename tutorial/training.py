@@ -236,7 +236,7 @@ def deploy(filenames, n_train=100, sigma=10.0, dataname="_deploy_"):
     training_forces = [forces[i] for i in training_indexes]
     training_forces = np.concatenate(training_forces)
 
-    kernel_te, kernel_t = generate_kernel(training_repr, training_d_repr, training_charges, sigma=sigma)
+    kernel_te, kernel_t = generate_kernel(training_repr, training_repr, training_d_repr, training_charges, training_charges, sigma=sigma)
 
     alpha = training(kernel_te, kernel_t, training_energies, training_forces)
 

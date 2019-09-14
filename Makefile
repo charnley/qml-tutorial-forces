@@ -24,13 +24,13 @@ download_ccsd: data
 #
 
 test:
-	${PYTHON} training.py --test
+	${PYTHON} tutorial/training.py --test
 
 deploy_model:
-	${PYTHON} training.py
+	${PYTHON} tutorial/training.py
 
 molcular_dynamics:
-	${PYTHON} molecular_dynamics.py --model data/_deploy_
+	${PYTHON} tutorial/molecular_dynamics.py --model data/_deploy_
 
 
 #
