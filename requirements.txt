@@ -1,0 +1,6 @@
+numpy
+scipy
+ase
+rmsd
+pandas
+git+git://github.com/andersx/qml@gradient_kernel
