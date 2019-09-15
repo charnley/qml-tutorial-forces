@@ -22,7 +22,7 @@ def dump_xyz(molecule, filename):
     return
 
 
-def main():
+def main_md():
 
     calculator = calculators.get_calculator("_deploy_", debug=False)
     atom_labels, coordinates = rmsd.get_coordinates_xyz("examples/ethanol.xyz")
@@ -35,6 +35,23 @@ def main():
 
     dyn = BFGS(molecule)
     dyn.run(fmax=0.5)
+
+    dump_xyz(molecule, "_tmp_molecule_optimize.xyz")
+
+
+    return
+
+
+def main():
+
+    calculator = calculators.get_calculator("_deploy_", debug=False)
+    atom_labels, coordinates = rmsd.get_coordinates_xyz("examples/ethanol.xyz")
+
+    molecule = ase.Atoms(atom_labels, coordinates)
+    molecule.set_calculator(calculator)
+
+    dyn = BFGS(molecule)
+    dyn.run(fmax=0.3)
 
     dump_xyz(molecule, "_tmp_molecule_optimize.xyz")
 
