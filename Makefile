@@ -21,9 +21,11 @@ jupyter-pip:
 data:
 	mkdir -p data
 
-download_dft: data
+data/training_data.tar.bz2: data
 	cd data; wget https://ndownloader.figshare.com/files/12842591 -O training_data.tar.bz2
-	cd data; bunzip2 training_data.tar.bz2
+
+download_dft: data data/training_data.tar.bz2
+	cd data; tar -xavf training_data.tar.bz2
 
 download_ccsd: data
 	cd data
